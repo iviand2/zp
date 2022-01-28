@@ -65,26 +65,48 @@ if __name__ == '__main__':
                         for cell in row[start+1: end]:
                             plan_data.append(cell.value)
                             colored = False
-                            if str(cell.fill.fgColor.rgb) != "Values must be of type <class 'str'>":
+                            if cell.fill.fgColor.type == "rgb":
                                 if cell.fill.fgColor.rgb != '00000000':
                                     colored = True
-                            if cell.fill.fgColor.tint != 0:
-                                colored = True
-                            if cell.fill.bgColor.index != '00000000':
-                                colored = True
+                            elif cell.fill.fgColor.type == 'indexed':
+                                if cell.fill.fgColor.index not in [1, 64, 63]:
+                                    colored = True
+                            elif cell.fill.fgColor.type == 'theme':
+                                if cell.fill.fgColor.tint != 0 or cell.fill.fgColor.theme != 0:
+                                    colored = True
+                            if cell.fill.bgColor.type == "rgb":
+                                if cell.fill.fgColor.rgb != '00000000':
+                                    colored = True
+                            elif cell.fill.bgColor.type == 'indexed':
+                                if cell.fill.bgColor.index not in [1, 64, 63]:
+                                    colored = True
+                            elif cell.fill.bgColor.type == 'theme':
+                                if cell.fill.bgColor.tint != 0 or cell.fill.bgColor.theme != 0:
+                                    colored = True
                             plan_colors.append(colored)
                         counter += 1
                     elif counter == 3:
                         for cell in row[start+1: end]:
                             data.append(cell.value)
                             colored = False
-                            if str(cell.fill.fgColor.rgb) != "Values must be of type <class 'str'>":
+                            if cell.fill.fgColor.type == "rgb":
                                 if cell.fill.fgColor.rgb != '00000000':
                                     colored = True
-                            if cell.fill.fgColor.tint != 0:
-                                colored = True
-                            if cell.fill.bgColor.index != '00000000':
-                                colored = True
+                            elif cell.fill.fgColor.type == 'indexed':
+                                if cell.fill.fgColor.index not in [1, 64, 63]:
+                                    colored = True
+                            elif cell.fill.fgColor.type == 'theme':
+                                if cell.fill.fgColor.tint != 0:
+                                    colored = True
+                            if cell.fill.bgColor.type == "rgb":
+                                if cell.fill.fgColor.rgb != '00000000':
+                                    colored = True
+                            elif cell.fill.bgColor.type == 'indexed':
+                                if cell.fill.bgColor.index not in [1, 64, 63]:
+                                    colored = True
+                            elif cell.fill.bgColor.type == 'theme':
+                                if cell.fill.bgColor.tint != 0:
+                                    colored = True
                             colors.append(colored)
                         break
                     else:
@@ -148,6 +170,6 @@ if __name__ == '__main__':
         ww = {c[0]: c[1]['Отработано'] for c in work_days.items()}
         pd.DataFrame.from_dict(ww, orient='index').dropna(how='all').T.to_excel('result.xlsx')
     except Exception as Ex:
-        raise Ex
+        # raise Ex
         PopupError(str(Ex))
 
